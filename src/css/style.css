@@ -1,0 +1,14 @@
+@import './reset';
+@import './vars';
+
+body { 
+  margin: 0;
+	/* background: linear-gradient(#e4e0ba, #f7d9aa); */
+	/* background: black; */
+}
+
+canvas { 
+  width: 100vw; 
+  height: 100vh;
+  position: fixed;
+}

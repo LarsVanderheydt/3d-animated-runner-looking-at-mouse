@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import Scene from './classes/Scene';
 import Aminolabs from './classes/Aminolabs';
 import Light from './classes/Light';
+import Cube from './classes/Cube';
+import ShaderMaterial from './classes/ShaderMaterial';
 
 const world = new Scene();
 const {
@@ -14,13 +16,20 @@ const {
 
 let WIDTH, HEIGHT;
 let windowHalfX, windowHalfY;
-let amino, pos, vec, sphere, light, mousePos = {
+let amino, pos, vec, sphere, light, cube, mousePos = {
   x: 0,
   y: 0
 };
 
 
-const draw = () => {
+
+const shader = new ShaderMaterial('lights');
+
+
+
+
+
+const draw = (timestamp) => {
   requestAnimationFrame(draw);
 
   // Map mouse position to world vector
@@ -35,6 +44,11 @@ const draw = () => {
   const distance = -camera.position.z / vec.z;
   pos.copy(camera.position).add(vec.multiplyScalar(distance));
   //////////
+
+  shader.draw(timestamp, vec);
+
+  // cube.mesh.rotation.y += .05;
+  // cube.mesh.position.y += .05;
 
 
   light.followMouse(pos);
@@ -72,23 +86,32 @@ const setup = () => {
 
   // Lightbulb that will follow the mouse
   light = new Light();
-  scene.add(light.group);
+  // scene.add(light.group);
   /////////////
 
 
   // Background
   const geometry = new THREE.SphereGeometry(40, 40, 40);
+
+
   const material = new THREE.MeshPhongMaterial({
     color: 0x42f4e8
   });
   sphere = new THREE.Mesh(geometry, material);
+  // sphere = new THREE.Mesh(geometry, shader.material);
   sphere.rotation.y = 180 / 180;
   sphere.receiveShadow = true;
   sphere.material.side = THREE.DoubleSide;
   sphere.position.x = -.3;
   sphere.position.y = 3.5;
-  scene.add(sphere);
+  // scene.add(sphere);
   /////////////
+
+
+  // cube = new Cube();
+  // cube.mesh.add(camera);
+  // scene.add(cube.mesh);
+
 
 
   // animated object

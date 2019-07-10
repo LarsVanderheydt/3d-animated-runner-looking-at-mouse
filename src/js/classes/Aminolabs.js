@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import '../lib/GLTFLoader';
+import Shader from './ShaderMaterial';
 
 export default class Anim {
 
@@ -8,6 +9,18 @@ export default class Anim {
     this.mixer;
     this.clock = new THREE.Clock();
     this.mesh, this.neck;
+    this.vec = new THREE.Vector3();
+    this.mousePos = {
+      x: 0,
+      y: 0
+    };
+
+    document.addEventListener(`mousemove`, event => {
+      this.mousePos = {
+        x: event.clientX,
+        y: event.clientY
+      };
+    }, false);
 
     loader.load(
       // './assets/glb/position.glb',
@@ -18,6 +31,7 @@ export default class Anim {
           skinning: true,
           shininess: 100
         });
+        const shader = new Shader('lights');
 
         const animations = gltf.animations;
         if (animations && animations.length) {
@@ -30,10 +44,19 @@ export default class Anim {
           }
         }
 
-        const update = () => {
+        const update = (timestamp) => {
           const mixerUpdateDelta = this.clock.getDelta();
           this.mixer.update(mixerUpdateDelta);
           requestAnimationFrame(update);
+
+          this.vec.set(
+            (this.mousePos.x / window.innerWidth) * 2 - 1,
+            -(this.mousePos.y / window.innerHeight) * 2 + 1,
+            0.5
+          );
+
+          shader.draw(timestamp, this.vec);
+
         };
 
         update();
@@ -42,13 +65,16 @@ export default class Anim {
           node.receiveShadow = true;
 
           if ( node instanceof THREE.Mesh ) {
-            node.material = material;
+            node.material = shader.material;
+            // node.material = material;
           }
         });
 
         this.mesh = gltf.scene.children[0];
         this.mesh.position.x = -.5;
-        this.mesh.scale.set(.04, .04, .04);
+        this.mesh.position.y = -9;
+        this.mesh.position.z = -10;
+        this.mesh.scale.set(.1, .1, .1);
         scene.add(this.mesh);
 
 

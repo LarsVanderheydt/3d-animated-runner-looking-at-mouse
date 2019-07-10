@@ -12,8 +12,9 @@ export default class Scene {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMapType = THREE.PCFSoftShadowMap; // options are THREE.BasicShadowMap | THREE.PCFShadowMap | THREE.PCFSoftShadowMap
     this.renderer.shadowMap.renderReverseSided = true;
+
     this.camera.position.z = 10;
-    this.camera.position.y = 3;
+    // this.camera.position.y = 40;
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
@@ -40,8 +41,8 @@ export default class Scene {
     ambientLight.name = 'ambientLight';
     ambientLight.position.x = -20;
 
-    this.scene.add(shadowLight);
-    this.scene.add(hemisphereLight);
+    // this.scene.add(shadowLight);
+    // this.scene.add(hemisphereLight);
     // this.scene.add(ambientLight);
     this.scene.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
 
